@@ -73,6 +73,10 @@ public class NamesrvController {
         this.configuration.setStorePathFromConfig(this.namesrvConfig, "configStorePath");
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean initialize() {
 
         this.kvConfigManager.load();
@@ -84,6 +88,7 @@ public class NamesrvController {
 
         this.registerProcessor();
 
+        //todo 每隔10s扫描一次broker，移除心跳时间超过120s的broker
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override
@@ -91,7 +96,7 @@ public class NamesrvController {
                 NamesrvController.this.routeInfoManager.scanNotActiveBroker();
             }
         }, 5, 10, TimeUnit.SECONDS);
-
+        //todo 每10分钟打印一次配置
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override
